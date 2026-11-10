@@ -1,0 +1,698 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.Admin",
+    "label": "Create table \"Admin\"",
+    "summary": "Creates table \"Admin\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Admin\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"Admin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Admin\"",
+        "sql": "CREATE TABLE \"public\".\"Admin\" (\n  \"adminId\" text NOT NULL,\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"password\" text NOT NULL,\n  \"phoneNumber\" text NOT NULL,\n  \"role\" text DEFAULT 'Admin' NOT NULL,\n  \"superAdminId\" int4 NOT NULL,\n  \"updatedAt\" timestamptz(3) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"Admin_role_check_fe981b9b\" CHECK (\"role\" IN ('SuperAdmin', 'Admin', 'Teacher', 'User'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Admin\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"Admin\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"Admin\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.SuperAdmin",
+    "label": "Create table \"SuperAdmin\"",
+    "summary": "Creates table \"SuperAdmin\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "SuperAdmin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"SuperAdmin\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"SuperAdmin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"SuperAdmin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"SuperAdmin\"",
+        "sql": "CREATE TABLE \"public\".\"SuperAdmin\" (\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"password\" text NOT NULL,\n  \"phoneNumber\" text NOT NULL,\n  \"role\" text DEFAULT 'SuperAdmin' NOT NULL,\n  \"superAdminId\" text NOT NULL,\n  \"updatedAt\" timestamptz(3) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"SuperAdmin_role_check_fe981b9b\" CHECK (\"role\" IN ('SuperAdmin', 'Admin', 'Teacher', 'User'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"SuperAdmin\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"SuperAdmin\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"SuperAdmin\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.Teacher",
+    "label": "Create table \"Teacher\"",
+    "summary": "Creates table \"Teacher\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Teacher"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Teacher\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Teacher\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"Teacher\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Teacher\"",
+        "sql": "CREATE TABLE \"public\".\"Teacher\" (\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"password\" text NOT NULL,\n  \"phoneNumber\" text NOT NULL,\n  \"role\" text DEFAULT 'Teacher' NOT NULL,\n  \"teacherId\" text NOT NULL,\n  \"updatedAt\" timestamptz(3) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"Teacher_role_check_fe981b9b\" CHECK (\"role\" IN ('SuperAdmin', 'Admin', 'Teacher', 'User'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Teacher\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"Teacher\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"Teacher\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "unique.Admin.Admin_adminId_key",
+    "label": "Add unique constraint on \"Admin\" (adminId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Admin_adminId_key",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Admin_adminId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Admin_adminId_key",
+          "public",
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Admin_adminId_key\" on \"Admin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Admin_adminId_key\"",
+        "sql": "ALTER TABLE \"public\".\"Admin\" ADD CONSTRAINT \"Admin_adminId_key\" UNIQUE (\"adminId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"Admin_adminId_key\" exists on (adminId)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "Admin_adminId_key",
+          "public",
+          "\"public\".\"Admin\"",
+          "u",
+          "[\"adminId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Admin.Admin_email_key",
+    "label": "Add unique constraint on \"Admin\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Admin_email_key",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Admin_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Admin_email_key",
+          "public",
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Admin_email_key\" on \"Admin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Admin_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"Admin\" ADD CONSTRAINT \"Admin_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"Admin_email_key\" exists on (email)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "Admin_email_key",
+          "public",
+          "\"public\".\"Admin\"",
+          "u",
+          "[\"email\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Admin.Admin_phoneNumber_key",
+    "label": "Add unique constraint on \"Admin\" (phoneNumber)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Admin_phoneNumber_key",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Admin_phoneNumber_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Admin_phoneNumber_key",
+          "public",
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Admin_phoneNumber_key\" on \"Admin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Admin_phoneNumber_key\"",
+        "sql": "ALTER TABLE \"public\".\"Admin\" ADD CONSTRAINT \"Admin_phoneNumber_key\" UNIQUE (\"phoneNumber\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"Admin_phoneNumber_key\" exists on (phoneNumber)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "Admin_phoneNumber_key",
+          "public",
+          "\"public\".\"Admin\"",
+          "u",
+          "[\"phoneNumber\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.SuperAdmin.SuperAdmin_superAdminId_key",
+    "label": "Add unique constraint on \"SuperAdmin\" (superAdminId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "SuperAdmin_superAdminId_key",
+        "table": "SuperAdmin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"SuperAdmin_superAdminId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "SuperAdmin_superAdminId_key",
+          "public",
+          "\"public\".\"SuperAdmin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"SuperAdmin_superAdminId_key\" on \"SuperAdmin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"SuperAdmin_superAdminId_key\"",
+        "sql": "ALTER TABLE \"public\".\"SuperAdmin\" ADD CONSTRAINT \"SuperAdmin_superAdminId_key\" UNIQUE (\"superAdminId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"SuperAdmin_superAdminId_key\" exists on (superAdminId)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "SuperAdmin_superAdminId_key",
+          "public",
+          "\"public\".\"SuperAdmin\"",
+          "u",
+          "[\"superAdminId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.SuperAdmin.SuperAdmin_email_key",
+    "label": "Add unique constraint on \"SuperAdmin\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "SuperAdmin_email_key",
+        "table": "SuperAdmin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"SuperAdmin_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "SuperAdmin_email_key",
+          "public",
+          "\"public\".\"SuperAdmin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"SuperAdmin_email_key\" on \"SuperAdmin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"SuperAdmin_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"SuperAdmin\" ADD CONSTRAINT \"SuperAdmin_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"SuperAdmin_email_key\" exists on (email)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "SuperAdmin_email_key",
+          "public",
+          "\"public\".\"SuperAdmin\"",
+          "u",
+          "[\"email\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.SuperAdmin.SuperAdmin_phoneNumber_key",
+    "label": "Add unique constraint on \"SuperAdmin\" (phoneNumber)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "SuperAdmin_phoneNumber_key",
+        "table": "SuperAdmin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"SuperAdmin_phoneNumber_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "SuperAdmin_phoneNumber_key",
+          "public",
+          "\"public\".\"SuperAdmin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"SuperAdmin_phoneNumber_key\" on \"SuperAdmin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"SuperAdmin_phoneNumber_key\"",
+        "sql": "ALTER TABLE \"public\".\"SuperAdmin\" ADD CONSTRAINT \"SuperAdmin_phoneNumber_key\" UNIQUE (\"phoneNumber\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"SuperAdmin_phoneNumber_key\" exists on (phoneNumber)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "SuperAdmin_phoneNumber_key",
+          "public",
+          "\"public\".\"SuperAdmin\"",
+          "u",
+          "[\"phoneNumber\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Teacher.Teacher_teacherId_key",
+    "label": "Add unique constraint on \"Teacher\" (teacherId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Teacher_teacherId_key",
+        "table": "Teacher"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Teacher_teacherId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Teacher_teacherId_key",
+          "public",
+          "\"public\".\"Teacher\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Teacher_teacherId_key\" on \"Teacher\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Teacher_teacherId_key\"",
+        "sql": "ALTER TABLE \"public\".\"Teacher\" ADD CONSTRAINT \"Teacher_teacherId_key\" UNIQUE (\"teacherId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"Teacher_teacherId_key\" exists on (teacherId)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "Teacher_teacherId_key",
+          "public",
+          "\"public\".\"Teacher\"",
+          "u",
+          "[\"teacherId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Teacher.Teacher_email_key",
+    "label": "Add unique constraint on \"Teacher\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Teacher_email_key",
+        "table": "Teacher"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Teacher_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Teacher_email_key",
+          "public",
+          "\"public\".\"Teacher\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Teacher_email_key\" on \"Teacher\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Teacher_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"Teacher\" ADD CONSTRAINT \"Teacher_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"Teacher_email_key\" exists on (email)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "Teacher_email_key",
+          "public",
+          "\"public\".\"Teacher\"",
+          "u",
+          "[\"email\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Teacher.Teacher_phoneNumber_key",
+    "label": "Add unique constraint on \"Teacher\" (phoneNumber)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Teacher_phoneNumber_key",
+        "table": "Teacher"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Teacher_phoneNumber_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Teacher_phoneNumber_key",
+          "public",
+          "\"public\".\"Teacher\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Teacher_phoneNumber_key\" on \"Teacher\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Teacher_phoneNumber_key\"",
+        "sql": "ALTER TABLE \"public\".\"Teacher\" ADD CONSTRAINT \"Teacher_phoneNumber_key\" UNIQUE (\"phoneNumber\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"Teacher_phoneNumber_key\" exists on (phoneNumber)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "Teacher_phoneNumber_key",
+          "public",
+          "\"public\".\"Teacher\"",
+          "u",
+          "[\"phoneNumber\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Admin.Admin_superAdminId_idx_0d7bb4bf",
+    "label": "Create index \"Admin_superAdminId_idx_0d7bb4bf\" on \"Admin\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Admin_superAdminId_idx_0d7bb4bf",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Admin_superAdminId_idx_0d7bb4bf\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Admin_superAdminId_idx_0d7bb4bf\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Admin_superAdminId_idx_0d7bb4bf\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Admin_superAdminId_idx_0d7bb4bf\"",
+        "sql": "CREATE INDEX \"Admin_superAdminId_idx_0d7bb4bf\" ON \"public\".\"Admin\" (\"superAdminId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Admin_superAdminId_idx_0d7bb4bf\" exists on \"Admin\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"Admin_superAdminId_idx_0d7bb4bf\"",
+          "i",
+          "I",
+          "\"public\".\"Admin\"",
+          "btree",
+          "[\"superAdminId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Admin.Admin_superAdminId_fkey",
+    "label": "Add foreign key \"Admin_superAdminId_fkey\" on \"Admin\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Admin_superAdminId_fkey",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Admin_superAdminId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Admin_superAdminId_fkey",
+          "public",
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"Admin_superAdminId_fkey\" on \"Admin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Admin_superAdminId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Admin\"\nADD CONSTRAINT \"Admin_superAdminId_fkey\"\nFOREIGN KEY (\"superAdminId\")\nREFERENCES \"public\".\"SuperAdmin\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Admin_superAdminId_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "Admin_superAdminId_fkey",
+          "public",
+          "\"public\".\"Admin\"",
+          "f",
+          "[\"superAdminId\"]",
+          "\"public\".\"SuperAdmin\"",
+          "[\"id\"]",
+          "r",
+          "a"
+        ]
+      }
+    ]
+  }
+]
