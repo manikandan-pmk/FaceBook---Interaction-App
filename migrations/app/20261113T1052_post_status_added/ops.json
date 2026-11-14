@@ -1,0 +1,119 @@
+[
+  {
+    "id": "column.public.Post.status",
+    "label": "Add column \"status\" to \"Post\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "status",
+        "table": "Post"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"status\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Post",
+          "status"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"status\" on \"Post\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"status\"",
+        "sql": "ALTER TABLE \"public\".\"Post\" ADD COLUMN \"status\" text DEFAULT 'Inactive' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"status\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Post",
+          "status"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"status\" on \"Post\""
+        }
+      },
+      {
+        "description": "verify column \"status\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "Post",
+          "status",
+          "text"
+        ]
+      },
+      {
+        "description": "verify column \"status\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "Post",
+          "status",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.Post.Post_status_check_b0bca701",
+    "label": "Add check constraint \"Post_status_check_b0bca701\" on \"Post\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "Post_status_check_b0bca701",
+        "table": "Post"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Post_status_check_b0bca701\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Post_status_check_b0bca701",
+          "public",
+          "\"public\".\"Post\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Post_status_check_b0bca701\" on \"Post\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"Post_status_check_b0bca701\"",
+        "sql": "ALTER TABLE \"public\".\"Post\" ADD CONSTRAINT \"Post_status_check_b0bca701\" CHECK (\"status\" IN ('Active', 'Inactive', 'Rejected'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"Post_status_check_b0bca701\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "Post_status_check_b0bca701",
+          "public",
+          "\"public\".\"Post\"",
+          "c"
+        ]
+      }
+    ]
+  }
+]

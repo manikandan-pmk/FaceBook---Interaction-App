@@ -2,13 +2,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import bcrypt from "bcryptjs";
-import { SignJWT } from "jose";
+import { createHash, randomUUID } from "crypto";
+
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "@/lib/jwt";
 
 export async function POST(req: NextRequest) {
   try {
     const { phoneNumber, password } = await req.json();
 
-    // Validate input
+    // 1. Validate input
     if (
       typeof phoneNumber !== "string" ||
       typeof password !== "string" ||
@@ -24,117 +29,125 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const phone = phoneNumber.trim();
+    const normalizedPhoneNumber = phoneNumber.trim();
 
-    // Find Admin and SuperAdmin
-const [superAdmin, admin] = await Promise.all([
-  db.orm.public.SuperAdmin.where({
-    phoneNumber: phone,
-  }).first(),
+    // 2. Find Admin
+    const admin = await db.orm.public.Admin.first({
+      phoneNumber: normalizedPhoneNumber,
+    });
 
-  db.orm.public.Admin.where({
-    phoneNumber: phone,
-  }).first(),
-]);
-
-    // Check account
-    if (!superAdmin && !admin) {
+    // 3. Check account existence
+    if (!admin) {
       return NextResponse.json(
         {
           success: false,
-          message: "Invalid phone number or password",
+          message: "Invalid credentials",
         },
         { status: 401 }
       );
     }
 
-    // Prevent duplicate account ambiguity
-    if (superAdmin && admin) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Multiple accounts found with this phone number",
-        },
-        { status: 409 }
-      );
-    }
-
-    // Identify account
-    const user = superAdmin || admin!;
-
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(
+    // 4. Verify password
+    const isValidPassword = await bcrypt.compare(
       password,
-      user.password
+      admin.password
     );
 
-    if (!isPasswordValid) {
+    if (!isValidPassword) {
       return NextResponse.json(
         {
           success: false,
-          message: "Invalid phone number or password",
+          message: "Invalid credentials",
         },
         { status: 401 }
       );
     }
 
-    // JWT secret
-    const secret = process.env.JWT_SECRET;
+    // 5. Token payload
+    const tokenPayload = {
+      id: admin.id,
+      adminId: admin.adminId,
+      email: admin.email,
+      role: "Admin" as const,
+    };
 
-    if (!secret) {
-      throw new Error("JWT_SECRET is not configured");
-    }
+    // 6. Generate access token
+    const accessToken = await generateAccessToken(tokenPayload);
 
-    // Determine role
-    const role = superAdmin ? "SuperAdmin" : "Admin";
+    // 7. Generate refresh token session ID
+    const jti = randomUUID();
 
-    // Generate JWT
-    const token = await new SignJWT({
-      id: user.id,
-      role,
-      ...(superAdmin
-        ? { superAdminId: superAdmin.superAdminId }
-        : {
-            adminId: admin!.adminId,
-            superAdminId: admin!.superAdminId,
-          }),
-    })
-      .setProtectedHeader({ alg: "HS256" })
-      .setIssuedAt()
-      .setExpirationTime("1d")
-      .sign(new TextEncoder().encode(secret));
+    // 8. Generate refresh token
+    const refreshToken = await generateRefreshToken({
+      ...tokenPayload,
+      jti,
+    });
 
-    // Create response
+    // 9. Hash refresh token
+    const tokenHash = createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
+
+    // 10. Refresh token expiry (7 days)
+    const expiresAt = new Date(
+      Date.now() + 7 * 24 * 60 * 60 * 1000
+    );
+
+    // 11. Request metadata
+    const userAgent = req.headers.get("user-agent") || null;
+
+    const ipAddress =
+      req.headers
+        .get("x-forwarded-for")
+        ?.split(",")[0]
+        ?.trim() ||
+      req.headers.get("x-real-ip") ||
+      null;
+
+    // 12. Save refresh token
+    await db.orm.public.RefreshToken.create({
+      jti,
+      tokenHash,
+      expiresAt,
+      adminId: admin.id,
+      userAgent,
+      ipAddress,
+    });
+
+    // 13. Create response
     const response = NextResponse.json(
       {
         success: true,
-        message: `${role} login successful`,
+        message: "Admin login successful",
+
         data: {
-          id: user.id,
-          ...(superAdmin
-            ? { superAdminId: superAdmin.superAdminId }
-            : {
-                adminId: admin!.adminId,
-                superAdminId: admin!.superAdminId,
-              }),
-          name: user.name,
-          email: user.email,
-          phoneNumber: user.phoneNumber,
-          role,
+          id: admin.id,
+          adminId: admin.adminId,
+          name: admin.name,
+          email: admin.email,
+          phoneNumber: admin.phoneNumber,
+          role: admin.role,
         },
       },
       { status: 200 }
     );
 
-    // HTTP-only cookie
-    response.cookies.set("auth_token", token, {
+    // 14. Access token cookie (15 minutes)
+    response.cookies.set("access_token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production"
-        ? "none"
-        : "lax",
+      sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24,
+      maxAge: 15 * 60,
+    });
+
+    // 15. Refresh token cookie (7 days)
+    response.cookies.set("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
     });
 
     return response;

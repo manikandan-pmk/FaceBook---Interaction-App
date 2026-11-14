@@ -1,0 +1,119 @@
+[
+  {
+    "id": "column.public.Teacher.status",
+    "label": "Add column \"status\" to \"Teacher\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "status",
+        "table": "Teacher"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"status\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Teacher",
+          "status"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"status\" on \"Teacher\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"status\"",
+        "sql": "ALTER TABLE \"public\".\"Teacher\" ADD COLUMN \"status\" text DEFAULT 'Inactive' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"status\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Teacher",
+          "status"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"status\" on \"Teacher\""
+        }
+      },
+      {
+        "description": "verify column \"status\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "Teacher",
+          "status",
+          "text"
+        ]
+      },
+      {
+        "description": "verify column \"status\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "Teacher",
+          "status",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.Teacher.Teacher_status_check_cf0b2206",
+    "label": "Add check constraint \"Teacher_status_check_cf0b2206\" on \"Teacher\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "Teacher_status_check_cf0b2206",
+        "table": "Teacher"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Teacher_status_check_cf0b2206\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Teacher_status_check_cf0b2206",
+          "public",
+          "\"public\".\"Teacher\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Teacher_status_check_cf0b2206\" on \"Teacher\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"Teacher_status_check_cf0b2206\"",
+        "sql": "ALTER TABLE \"public\".\"Teacher\" ADD CONSTRAINT \"Teacher_status_check_cf0b2206\" CHECK (\"status\" IN ('Active', 'Inactive'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"Teacher_status_check_cf0b2206\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "Teacher_status_check_cf0b2206",
+          "public",
+          "\"public\".\"Teacher\"",
+          "c"
+        ]
+      }
+    ]
+  }
+]

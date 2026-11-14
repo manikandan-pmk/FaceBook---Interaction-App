@@ -48,7 +48,7 @@ const menuSections = [
       },
       {
         title: "Teacher Management",
-        href: "/superadmin/teachers",
+        href: "/dashboard/teachers-management",
         icon: GraduationCap,
       },
     ],

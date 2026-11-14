@@ -1,56 +1,100 @@
 // use prisma-8
 
 enum Role {
-  SuperAdmin
   Admin
   Teacher
-  User
 }
 
-model SuperAdmin {
-  id           Int      @id @default(autoincrement())
-  superAdminId String   @unique
-  name         String
-  email        String   @unique
-  phoneNumber  String @unique
-  password     String
-  role         Role     @default(SuperAdmin)
+enum PostStatus {
+  Active
+  Inactive
+  Rejected
+}
 
-  admins       Admin[]
+enum Status {
+  Active 
+  Inactive
+}
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @onCreate(now()) @onUpdate(now())
+enum PostType {
+  TEXT
+  IMAGE
+  VIDEO
 }
 
 model Admin {
-  id           Int      @id @default(autoincrement())
-  adminId      String   @unique
-  name         String
-  email        String   @unique
-  phoneNumber  String @unique
-  password     String
-  role         Role     @default(Admin)
+  id            Int            @id @default(autoincrement())
+  adminId       String         @unique
+  name          String
+  email         String         @unique
+  phoneNumber   String         @unique
+  password      String
+  role          Role           @default(Admin)
 
-  superAdminId Int
-  superAdmin   SuperAdmin @relation(
-    fields: [superAdminId],
-    references: [id],
-    onDelete: Restrict
-  )
+  refreshTokens RefreshToken[]
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @onCreate(now()) @onUpdate(now())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @onCreate(now()) @onUpdate(now())
 }
 
 model Teacher {
-  id        Int      @id @default(autoincrement())
-  teacherId String   @unique
-  name      String
-  email     String   @unique
-  phoneNumber  String @unique
-  password  String
-  role      Role     @default(Teacher)
+  id            Int            @id @default(autoincrement())
+  teacherId     String         @unique
+  name          String
+  email         String         @unique
+  phoneNumber   String         @unique
+  password      String
+  role          Role           @default(Teacher)
+  status        Status  @default(Inactive)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @onCreate(now()) @onUpdate(now())
+  posts Post[]
+
+  refreshTokens RefreshToken[]
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @onCreate(now()) @onUpdate(now())
+}
+
+model RefreshToken {
+  id          Int      @id @default(autoincrement())
+  jti         String   @unique
+  tokenHash   String   @unique
+
+  expiresAt   DateTime
+  revokedAt   DateTime?
+
+  adminId     Int?
+  admin       Admin?   @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  teacherId   Int?
+  teacher     Teacher? @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  userAgent   String?
+  ipAddress   String?
+
+  createdAt   DateTime @default(now())
+
+  @@index([adminId])
+  @@index([teacherId])
+  @@index([expiresAt])
+}
+
+model Post {
+  id String @id @onCreate(uuid())
+  caption String?
+  media String?
+  type PostType @default(TEXT)
+  likes Int @default(0)
+  shares Int @default(0)
+  status PostStatus @default(Inactive)
+  views Int @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt DateTime  @onCreate(now()) @onUpdate(now())
+
+  teacherId String
+  teacher Teacher @relation(fields:[teacherId],references:[teacherId],onDelete:Cascade)
+
+@@index([teacherId])
+@@index([createdAt])
+@@index([type])
 }

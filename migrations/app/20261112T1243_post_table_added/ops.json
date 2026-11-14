@@ -1,0 +1,247 @@
+[
+  {
+    "id": "table.Post",
+    "label": "Create table \"Post\"",
+    "summary": "Creates table \"Post\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Post"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Post\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Post\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"Post\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Post\"",
+        "sql": "CREATE TABLE \"public\".\"Post\" (\n  \"caption\" text,\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"likes\" int4 DEFAULT 0 NOT NULL,\n  \"media\" text,\n  \"shares\" int4 DEFAULT 0 NOT NULL,\n  \"teacherId\" text NOT NULL,\n  \"type\" text DEFAULT 'TEXT' NOT NULL,\n  \"updatedAt\" timestamptz(3) NOT NULL,\n  \"views\" int4 DEFAULT 0 NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"Post_type_check_3926ae79\" CHECK (\"type\" IN ('TEXT', 'IMAGE', 'VIDEO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Post\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"Post\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"Post\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "index.Post.Post_createdAt_idx_9575dbd7",
+    "label": "Create index \"Post_createdAt_idx_9575dbd7\" on \"Post\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Post_createdAt_idx_9575dbd7",
+        "table": "Post"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Post_createdAt_idx_9575dbd7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Post_createdAt_idx_9575dbd7\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Post_createdAt_idx_9575dbd7\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Post_createdAt_idx_9575dbd7\"",
+        "sql": "CREATE INDEX \"Post_createdAt_idx_9575dbd7\" ON \"public\".\"Post\" (\"createdAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Post_createdAt_idx_9575dbd7\" exists on \"Post\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"Post_createdAt_idx_9575dbd7\"",
+          "i",
+          "I",
+          "\"public\".\"Post\"",
+          "btree",
+          "[\"createdAt\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Post.Post_teacherId_idx_bc266660",
+    "label": "Create index \"Post_teacherId_idx_bc266660\" on \"Post\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Post_teacherId_idx_bc266660",
+        "table": "Post"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Post_teacherId_idx_bc266660\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Post_teacherId_idx_bc266660\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Post_teacherId_idx_bc266660\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Post_teacherId_idx_bc266660\"",
+        "sql": "CREATE INDEX \"Post_teacherId_idx_bc266660\" ON \"public\".\"Post\" (\"teacherId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Post_teacherId_idx_bc266660\" exists on \"Post\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"Post_teacherId_idx_bc266660\"",
+          "i",
+          "I",
+          "\"public\".\"Post\"",
+          "btree",
+          "[\"teacherId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Post.Post_type_idx_b6b604ea",
+    "label": "Create index \"Post_type_idx_b6b604ea\" on \"Post\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Post_type_idx_b6b604ea",
+        "table": "Post"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Post_type_idx_b6b604ea\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Post_type_idx_b6b604ea\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Post_type_idx_b6b604ea\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Post_type_idx_b6b604ea\"",
+        "sql": "CREATE INDEX \"Post_type_idx_b6b604ea\" ON \"public\".\"Post\" (\"type\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Post_type_idx_b6b604ea\" exists on \"Post\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"Post_type_idx_b6b604ea\"",
+          "i",
+          "I",
+          "\"public\".\"Post\"",
+          "btree",
+          "[\"type\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Post.Post_teacherId_fkey",
+    "label": "Add foreign key \"Post_teacherId_fkey\" on \"Post\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Post_teacherId_fkey",
+        "table": "Post"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Post_teacherId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Post_teacherId_fkey",
+          "public",
+          "\"public\".\"Post\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"Post_teacherId_fkey\" on \"Post\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Post_teacherId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Post\"\nADD CONSTRAINT \"Post_teacherId_fkey\"\nFOREIGN KEY (\"teacherId\")\nREFERENCES \"public\".\"Teacher\" (\"teacherId\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Post_teacherId_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "Post_teacherId_fkey",
+          "public",
+          "\"public\".\"Post\"",
+          "f",
+          "[\"teacherId\"]",
+          "\"public\".\"Teacher\"",
+          "[\"teacherId\"]",
+          "c",
+          "a"
+        ]
+      }
+    ]
+  }
+]

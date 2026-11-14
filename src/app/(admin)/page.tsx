@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -13,7 +12,7 @@ import {
   AlertTriangle,
   CheckCircle2,
 } from "lucide-react";
-import { useAuthStore } from "@/store/authStore"
+import { useAuthStore } from "@/store/authStore";
 
 const Page = () => {
   const router = useRouter();
@@ -24,85 +23,81 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
- const { setSuperAdmin, setAdmin } = useAuthStore();
+  const { setSuperAdmin, setAdmin } = useAuthStore();
 
-  
-const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setError("");
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
 
-  if (!phoneNumber.trim() || !password) {
-    setError("Please enter your phone number and password.");
-    return;
-  }
-
-  try {
-    setLoading(true);
-
-    const response = await axios.post(
-      "/api/v1/auth/admin/login",
-      {
-        phoneNumber: phoneNumber.trim(),
-        password,
-      },
-      {
-        withCredentials: true,
-      }
-    );
-
-    if (response.status === 200) {
-      const user = response.data;
-      console.log("Logged in user:", user);
-
-      switch (user.data.role) {
-        case "SuperAdmin":
-          setSuperAdmin(user);
-          break;
-
-        case "Admin":
-          setAdmin(user);
-          break;
-
-        default:
-          setError("Invalid user role.");
-          return;
-      }
-      console.log("Zustand Store:", useAuthStore.getState());
-
-      router.replace("/dashboard");
-      router.refresh();
+    if (!phoneNumber.trim() || !password) {
+      setError("Please enter your phone number and password.");
+      return;
     }
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err)) {
-      setError(
-        err.response?.data?.message ||
-        "Invalid credentials. Please try again."
+
+    try {
+      setLoading(true);
+
+      const response = await axios.post(
+        "/api/v1/auth/admin/login",
+        {
+          phoneNumber: phoneNumber.trim(),
+          password,
+        },
+        {
+          withCredentials: true,
+        },
       );
-    } else {
-      setError("Something went wrong.");
-      console.error(err);
-    }
-  } finally {
-    setLoading(false);
-  }
-};
 
+      if (response.status === 200) {
+        const user = response.data.data;
+
+        console.log("Logged in user:", user);
+
+        switch (user.role) {
+          case "SuperAdmin":
+            setSuperAdmin(user);
+            break;
+
+          case "Admin":
+            setAdmin(user);
+            break;
+
+          default:
+            setError("Invalid user role.");
+            return;
+        }
+
+        console.log("Zustand Store:", useAuthStore.getState());
+
+        router.replace("/dashboard");
+        router.refresh();
+      }
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ||
+            "Invalid credentials. Please try again.",
+        );
+      } else {
+        setError("Something went wrong.");
+        console.error(err);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="flex min-h-screen w-full bg-white text-zinc-950 selection:bg-zinc-200 selection:text-zinc-900">
-
       {/* Left Branding Panel */}
       <div className="relative hidden w-1/2 flex-col justify-between bg-zinc-950 p-12 text-zinc-100 lg:flex">
-
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 pointer-events-none" />
 
         <div className="relative z-10 flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 text-zinc-950">
             <Command size={22} strokeWidth={2.5} />
           </div>
-          <span className="text-xl font-bold tracking-tight">
-            System Core
-          </span>
+          <span className="text-xl font-bold tracking-tight">System Core</span>
         </div>
 
         <div className="relative z-10 max-w-md">
@@ -124,7 +119,6 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
       {/* Right Login Form */}
       <div className="flex w-full items-center justify-center p-8 sm:p-12 lg:w-1/2">
         <div className="mx-auto w-full max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
-
           {/* Mobile Logo */}
           <div className="mb-10 flex items-center gap-2 lg:hidden">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-950 text-white">
@@ -145,7 +139,6 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
-
             {/* Phone Number */}
             <div className="space-y-2">
               <label
@@ -202,11 +195,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
                   className="absolute right-0 top-0 flex h-12 w-12 items-center justify-center text-zinc-400 hover:text-zinc-900 disabled:opacity-50 transition-colors"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>

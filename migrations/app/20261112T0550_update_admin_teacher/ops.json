@@ -1,0 +1,653 @@
+[
+  {
+    "id": "dropConstraint.Admin.Admin_superAdminId_fkey",
+    "label": "Drop constraint \"Admin_superAdminId_fkey\" on \"Admin\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Admin_superAdminId_fkey",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Admin_superAdminId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Admin_superAdminId_fkey",
+          "public",
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"Admin_superAdminId_fkey\" on \"Admin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"Admin_superAdminId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Admin\" DROP CONSTRAINT \"Admin_superAdminId_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"Admin_superAdminId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Admin_superAdminId_fkey",
+          "public",
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Admin_superAdminId_fkey\" on \"Admin\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropConstraint.RefreshToken.RefreshToken_superAdminId_fkey",
+    "label": "Drop constraint \"RefreshToken_superAdminId_fkey\" on \"RefreshToken\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "RefreshToken_superAdminId_fkey",
+        "table": "RefreshToken"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"RefreshToken_superAdminId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "RefreshToken_superAdminId_fkey",
+          "public",
+          "\"public\".\"RefreshToken\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"RefreshToken_superAdminId_fkey\" on \"RefreshToken\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"RefreshToken_superAdminId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"RefreshToken\" DROP CONSTRAINT \"RefreshToken_superAdminId_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"RefreshToken_superAdminId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "RefreshToken_superAdminId_fkey",
+          "public",
+          "\"public\".\"RefreshToken\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"RefreshToken_superAdminId_fkey\" on \"RefreshToken\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.Admin.Admin_role_check_897d42b2",
+    "label": "Drop check constraint \"Admin_role_check_897d42b2\" on \"Admin\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "Admin_role_check_897d42b2",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Admin_role_check_897d42b2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Admin_role_check_897d42b2",
+          "public",
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"Admin_role_check_897d42b2\" on \"Admin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"Admin_role_check_897d42b2\"",
+        "sql": "ALTER TABLE \"public\".\"Admin\" DROP CONSTRAINT \"Admin_role_check_897d42b2\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"Admin_role_check_897d42b2\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Admin_role_check_897d42b2",
+          "public",
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Admin_role_check_897d42b2\" on \"Admin\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropIndex.Admin.Admin_superAdminId_idx_0d7bb4bf",
+    "label": "Drop index \"Admin_superAdminId_idx_0d7bb4bf\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Admin_superAdminId_idx_0d7bb4bf",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Admin_superAdminId_idx_0d7bb4bf\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Admin_superAdminId_idx_0d7bb4bf\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "index \"Admin_superAdminId_idx_0d7bb4bf\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop index \"Admin_superAdminId_idx_0d7bb4bf\"",
+        "sql": "DROP INDEX \"public\".\"Admin_superAdminId_idx_0d7bb4bf\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Admin_superAdminId_idx_0d7bb4bf\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Admin_superAdminId_idx_0d7bb4bf\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Admin_superAdminId_idx_0d7bb4bf\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.Admin.superAdminId",
+    "label": "Drop column \"superAdminId\" from \"Admin\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "superAdminId",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"superAdminId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Admin",
+          "superAdminId"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"superAdminId\" on \"Admin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"superAdminId\"",
+        "sql": "ALTER TABLE \"public\".\"Admin\" DROP COLUMN \"superAdminId\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"superAdminId\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Admin",
+          "superAdminId"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"superAdminId\" on \"Admin\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropIndex.RefreshToken.RefreshToken_superAdminId_idx_0d7bb4bf",
+    "label": "Drop index \"RefreshToken_superAdminId_idx_0d7bb4bf\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "RefreshToken_superAdminId_idx_0d7bb4bf",
+        "table": "RefreshToken"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"RefreshToken_superAdminId_idx_0d7bb4bf\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"RefreshToken_superAdminId_idx_0d7bb4bf\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "index \"RefreshToken_superAdminId_idx_0d7bb4bf\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop index \"RefreshToken_superAdminId_idx_0d7bb4bf\"",
+        "sql": "DROP INDEX \"public\".\"RefreshToken_superAdminId_idx_0d7bb4bf\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"RefreshToken_superAdminId_idx_0d7bb4bf\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"RefreshToken_superAdminId_idx_0d7bb4bf\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"RefreshToken_superAdminId_idx_0d7bb4bf\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.RefreshToken.superAdminId",
+    "label": "Drop column \"superAdminId\" from \"RefreshToken\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "superAdminId",
+        "table": "RefreshToken"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"superAdminId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "RefreshToken",
+          "superAdminId"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"superAdminId\" on \"RefreshToken\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"superAdminId\"",
+        "sql": "ALTER TABLE \"public\".\"RefreshToken\" DROP COLUMN \"superAdminId\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"superAdminId\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "RefreshToken",
+          "superAdminId"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"superAdminId\" on \"RefreshToken\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropTable.SuperAdmin",
+    "label": "Drop table \"SuperAdmin\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "SuperAdmin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"SuperAdmin\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"SuperAdmin\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"SuperAdmin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop table \"SuperAdmin\"",
+        "sql": "DROP TABLE \"public\".\"SuperAdmin\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"SuperAdmin\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"SuperAdmin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"SuperAdmin\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.Teacher.Teacher_role_check_897d42b2",
+    "label": "Drop check constraint \"Teacher_role_check_897d42b2\" on \"Teacher\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "Teacher_role_check_897d42b2",
+        "table": "Teacher"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Teacher_role_check_897d42b2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Teacher_role_check_897d42b2",
+          "public",
+          "\"public\".\"Teacher\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"Teacher_role_check_897d42b2\" on \"Teacher\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"Teacher_role_check_897d42b2\"",
+        "sql": "ALTER TABLE \"public\".\"Teacher\" DROP CONSTRAINT \"Teacher_role_check_897d42b2\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"Teacher_role_check_897d42b2\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Teacher_role_check_897d42b2",
+          "public",
+          "\"public\".\"Teacher\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Teacher_role_check_897d42b2\" on \"Teacher\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "removeStoredValue.Admin.role.SuperAdmin",
+    "label": "Remove value \"SuperAdmin\" from column \"role\" of \"Admin\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "role",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"role\" of \"Admin\" takes NULL, or no row holds \"SuperAdmin\" in it",
+        "sql": "SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = $2 AND column_name = $3 AND is_nullable = 'YES') OR NOT EXISTS (SELECT 1 FROM \"public\".\"Admin\" WHERE \"role\" = $1) AS result",
+        "params": [
+          "SuperAdmin",
+          "Admin",
+          "role"
+        ],
+        "meta": {
+          "rowsHoldingValue": {
+            "enumValue": {
+              "namespaceId": "public",
+              "enum": "Role",
+              "member": "SuperAdmin"
+            },
+            "value": "SuperAdmin",
+            "codecRef": {
+              "codecId": "pg/text@1"
+            },
+            "table": "Admin",
+            "column": "role",
+            "storedValue": "SuperAdmin"
+          }
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "remove value \"SuperAdmin\" from column \"role\"",
+        "sql": "UPDATE \"public\".\"Admin\" SET \"role\" = NULL WHERE \"role\" = $1",
+        "params": [
+          "SuperAdmin"
+        ]
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no row of \"Admin\" holds value \"SuperAdmin\" in column \"role\"",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"Admin\" WHERE \"role\" = $1) AS result",
+        "params": [
+          "SuperAdmin"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "removeStoredValue.Teacher.role.SuperAdmin",
+    "label": "Remove value \"SuperAdmin\" from column \"role\" of \"Teacher\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "role",
+        "table": "Teacher"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"role\" of \"Teacher\" takes NULL, or no row holds \"SuperAdmin\" in it",
+        "sql": "SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = $2 AND column_name = $3 AND is_nullable = 'YES') OR NOT EXISTS (SELECT 1 FROM \"public\".\"Teacher\" WHERE \"role\" = $1) AS result",
+        "params": [
+          "SuperAdmin",
+          "Teacher",
+          "role"
+        ],
+        "meta": {
+          "rowsHoldingValue": {
+            "enumValue": {
+              "namespaceId": "public",
+              "enum": "Role",
+              "member": "SuperAdmin"
+            },
+            "value": "SuperAdmin",
+            "codecRef": {
+              "codecId": "pg/text@1"
+            },
+            "table": "Teacher",
+            "column": "role",
+            "storedValue": "SuperAdmin"
+          }
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "remove value \"SuperAdmin\" from column \"role\"",
+        "sql": "UPDATE \"public\".\"Teacher\" SET \"role\" = NULL WHERE \"role\" = $1",
+        "params": [
+          "SuperAdmin"
+        ]
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no row of \"Teacher\" holds value \"SuperAdmin\" in column \"role\"",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"Teacher\" WHERE \"role\" = $1) AS result",
+        "params": [
+          "SuperAdmin"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.Admin.Admin_role_check_578d1aa1",
+    "label": "Add check constraint \"Admin_role_check_578d1aa1\" on \"Admin\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "Admin_role_check_578d1aa1",
+        "table": "Admin"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Admin_role_check_578d1aa1\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Admin_role_check_578d1aa1",
+          "public",
+          "\"public\".\"Admin\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Admin_role_check_578d1aa1\" on \"Admin\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"Admin_role_check_578d1aa1\"",
+        "sql": "ALTER TABLE \"public\".\"Admin\" ADD CONSTRAINT \"Admin_role_check_578d1aa1\" CHECK (\"role\" IN ('Admin', 'Teacher'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"Admin_role_check_578d1aa1\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "Admin_role_check_578d1aa1",
+          "public",
+          "\"public\".\"Admin\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.Teacher.Teacher_role_check_578d1aa1",
+    "label": "Add check constraint \"Teacher_role_check_578d1aa1\" on \"Teacher\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "Teacher_role_check_578d1aa1",
+        "table": "Teacher"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Teacher_role_check_578d1aa1\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Teacher_role_check_578d1aa1",
+          "public",
+          "\"public\".\"Teacher\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Teacher_role_check_578d1aa1\" on \"Teacher\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"Teacher_role_check_578d1aa1\"",
+        "sql": "ALTER TABLE \"public\".\"Teacher\" ADD CONSTRAINT \"Teacher_role_check_578d1aa1\" CHECK (\"role\" IN ('Admin', 'Teacher'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"Teacher_role_check_578d1aa1\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "Teacher_role_check_578d1aa1",
+          "public",
+          "\"public\".\"Teacher\"",
+          "c"
+        ]
+      }
+    ]
+  }
+]

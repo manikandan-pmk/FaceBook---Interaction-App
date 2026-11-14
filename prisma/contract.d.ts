@@ -23,9 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'b0bb3180486c3f2ffa976c7d42005f38bb349823239bd4500e6bb0081c2ec590'>;
+  StorageHashBase<'1929b64aaaf75de6e31885926b0eae127c6562597ecd18b34051d452d509a6df'>;
 export type ExecutionHash =
-  ExecutionHashBase<'4529b3964b1a59ea3315f467614bd48cd4795094b13b241bf69efb015a07071e'>;
+  ExecutionHashBase<'4048d217add5e3afd77e0426b4d6df0ec1e0fd8860ed9caa40cc714f3555459f'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -280,20 +280,28 @@ type FieldTypeOverrides = {
     readonly models: {
       readonly Admin: {
         readonly role: {
-          readonly output: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
-          readonly input: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
+          readonly output: 'Admin' | 'Teacher';
+          readonly input: 'Admin' | 'Teacher';
         };
       };
-      readonly SuperAdmin: {
-        readonly role: {
-          readonly output: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
-          readonly input: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
+      readonly Post: {
+        readonly status: {
+          readonly output: 'Active' | 'Inactive' | 'Rejected';
+          readonly input: 'Active' | 'Inactive' | 'Rejected';
+        };
+        readonly type: {
+          readonly output: 'TEXT' | 'IMAGE' | 'VIDEO';
+          readonly input: 'TEXT' | 'IMAGE' | 'VIDEO';
         };
       };
       readonly Teacher: {
         readonly role: {
-          readonly output: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
-          readonly input: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
+          readonly output: 'Admin' | 'Teacher';
+          readonly input: 'Admin' | 'Teacher';
+        };
+        readonly status: {
+          readonly output: 'Active' | 'Inactive';
+          readonly input: 'Active' | 'Inactive';
         };
       };
     };
@@ -318,21 +326,23 @@ export type FieldInputTypes = FieldTypesFromDomain<
 type ColumnTypeOverrides = {
   readonly public: {
     readonly Admin: {
-      readonly role: {
-        readonly output: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
-        readonly input: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
-      };
+      readonly role: { readonly output: 'Admin' | 'Teacher'; readonly input: 'Admin' | 'Teacher' };
     };
-    readonly SuperAdmin: {
-      readonly role: {
-        readonly output: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
-        readonly input: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
+    readonly Post: {
+      readonly status: {
+        readonly output: 'Active' | 'Inactive' | 'Rejected';
+        readonly input: 'Active' | 'Inactive' | 'Rejected';
+      };
+      readonly type: {
+        readonly output: 'TEXT' | 'IMAGE' | 'VIDEO';
+        readonly input: 'TEXT' | 'IMAGE' | 'VIDEO';
       };
     };
     readonly Teacher: {
-      readonly role: {
-        readonly output: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
-        readonly input: 'SuperAdmin' | 'Admin' | 'Teacher' | 'User';
+      readonly role: { readonly output: 'Admin' | 'Teacher'; readonly input: 'Admin' | 'Teacher' };
+      readonly status: {
+        readonly output: 'Active' | 'Inactive';
+        readonly input: 'Active' | 'Inactive';
       };
     };
   };
@@ -362,23 +372,39 @@ export namespace Models {
     password: FieldOutputTypes['public']['Admin']['password'];
     phoneNumber: FieldOutputTypes['public']['Admin']['phoneNumber'];
     role: FieldOutputTypes['public']['Admin']['role'];
-    superAdminId: FieldOutputTypes['public']['Admin']['superAdminId'];
     updatedAt: FieldOutputTypes['public']['Admin']['updatedAt'];
-    superAdmin: public_SuperAdmin;
-    readonly [RelationKeys]?: 'superAdmin';
+    refreshTokens: public_RefreshToken[];
+    readonly [RelationKeys]?: 'refreshTokens';
   };
-  export type public_SuperAdmin = {
-    createdAt: FieldOutputTypes['public']['SuperAdmin']['createdAt'];
-    email: FieldOutputTypes['public']['SuperAdmin']['email'];
-    id: FieldOutputTypes['public']['SuperAdmin']['id'];
-    name: FieldOutputTypes['public']['SuperAdmin']['name'];
-    password: FieldOutputTypes['public']['SuperAdmin']['password'];
-    phoneNumber: FieldOutputTypes['public']['SuperAdmin']['phoneNumber'];
-    role: FieldOutputTypes['public']['SuperAdmin']['role'];
-    superAdminId: FieldOutputTypes['public']['SuperAdmin']['superAdminId'];
-    updatedAt: FieldOutputTypes['public']['SuperAdmin']['updatedAt'];
-    admins: public_Admin[];
-    readonly [RelationKeys]?: 'admins';
+  export type public_Post = {
+    caption: FieldOutputTypes['public']['Post']['caption'];
+    createdAt: FieldOutputTypes['public']['Post']['createdAt'];
+    id: FieldOutputTypes['public']['Post']['id'];
+    likes: FieldOutputTypes['public']['Post']['likes'];
+    media: FieldOutputTypes['public']['Post']['media'];
+    shares: FieldOutputTypes['public']['Post']['shares'];
+    status: FieldOutputTypes['public']['Post']['status'];
+    teacherId: FieldOutputTypes['public']['Post']['teacherId'];
+    type: FieldOutputTypes['public']['Post']['type'];
+    updatedAt: FieldOutputTypes['public']['Post']['updatedAt'];
+    views: FieldOutputTypes['public']['Post']['views'];
+    teacher: public_Teacher;
+    readonly [RelationKeys]?: 'teacher';
+  };
+  export type public_RefreshToken = {
+    adminId: FieldOutputTypes['public']['RefreshToken']['adminId'];
+    createdAt: FieldOutputTypes['public']['RefreshToken']['createdAt'];
+    expiresAt: FieldOutputTypes['public']['RefreshToken']['expiresAt'];
+    id: FieldOutputTypes['public']['RefreshToken']['id'];
+    ipAddress: FieldOutputTypes['public']['RefreshToken']['ipAddress'];
+    jti: FieldOutputTypes['public']['RefreshToken']['jti'];
+    revokedAt: FieldOutputTypes['public']['RefreshToken']['revokedAt'];
+    teacherId: FieldOutputTypes['public']['RefreshToken']['teacherId'];
+    tokenHash: FieldOutputTypes['public']['RefreshToken']['tokenHash'];
+    userAgent: FieldOutputTypes['public']['RefreshToken']['userAgent'];
+    admin: public_Admin | null;
+    teacher: public_Teacher | null;
+    readonly [RelationKeys]?: 'admin' | 'teacher';
   };
   export type public_Teacher = {
     createdAt: FieldOutputTypes['public']['Teacher']['createdAt'];
@@ -388,16 +414,20 @@ export namespace Models {
     password: FieldOutputTypes['public']['Teacher']['password'];
     phoneNumber: FieldOutputTypes['public']['Teacher']['phoneNumber'];
     role: FieldOutputTypes['public']['Teacher']['role'];
+    status: FieldOutputTypes['public']['Teacher']['status'];
     teacherId: FieldOutputTypes['public']['Teacher']['teacherId'];
     updatedAt: FieldOutputTypes['public']['Teacher']['updatedAt'];
-    readonly [RelationKeys]?: never;
+    posts: public_Post[];
+    refreshTokens: public_RefreshToken[];
+    readonly [RelationKeys]?: 'posts' | 'refreshTokens';
   };
 }
 
 export declare const models: {
   public: {
     Admin: Models.public_Admin;
-    SuperAdmin: Models.public_SuperAdmin;
+    Post: Models.public_Post;
+    RefreshToken: Models.public_RefreshToken;
     Teacher: Models.public_Teacher;
   };
 };
@@ -480,12 +510,6 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
-                readonly superAdminId: {
-                  readonly dataType: 'pg/int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
                 readonly updatedAt: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-date@1';
@@ -500,31 +524,17 @@ type ContractBase = Omit<
                 { readonly columns: readonly ['email'] },
                 { readonly columns: readonly ['phoneNumber'] },
               ];
-              indexes: readonly [
-                {
-                  readonly name: 'Admin_superAdminId_idx_0d7bb4bf';
-                  readonly prefix: 'Admin_superAdminId_idx';
-                  readonly columns: readonly ['superAdminId'];
-                  readonly unique: false;
-                },
-              ];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'Admin';
-                    readonly columns: readonly ['superAdminId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'SuperAdmin';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-              ];
+              indexes: readonly [];
+              foreignKeys: readonly [];
             };
-            readonly SuperAdmin: {
+            readonly Post: {
               columns: {
+                readonly caption: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
                 readonly createdAt: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-date@1';
@@ -533,10 +543,140 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 3 };
                   readonly many: false;
                 };
-                readonly email: {
+                readonly id: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly likes: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                  readonly many: false;
+                };
+                readonly media: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly shares: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                  readonly many: false;
+                };
+                readonly status: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'Inactive'>;
+                  };
+                  readonly many: false;
+                };
+                readonly teacherId: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly type: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'TEXT'>;
+                  };
+                  readonly many: false;
+                };
+                readonly updatedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly views: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'Post_createdAt_idx_9575dbd7';
+                  readonly prefix: 'Post_createdAt_idx';
+                  readonly columns: readonly ['createdAt'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'Post_teacherId_idx_bc266660';
+                  readonly prefix: 'Post_teacherId_idx';
+                  readonly columns: readonly ['teacherId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'Post_type_idx_b6b604ea';
+                  readonly prefix: 'Post_type_idx';
+                  readonly columns: readonly ['type'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'Post';
+                    readonly columns: readonly ['teacherId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'Teacher';
+                    readonly columns: readonly ['teacherId'];
+                  };
+                },
+              ];
+            };
+            readonly RefreshToken: {
+              columns: {
+                readonly adminId: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly createdAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly expiresAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 3 };
                   readonly many: false;
                 };
                 readonly id: {
@@ -549,56 +689,95 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
-                readonly name: {
+                readonly ipAddress: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly jti: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly password: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly phoneNumber: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly role: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'SuperAdmin'>;
-                  };
-                  readonly many: false;
-                };
-                readonly superAdminId: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly updatedAt: {
+                readonly revokedAt: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-date@1';
-                  readonly nullable: false;
+                  readonly nullable: true;
                   readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly teacherId: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly tokenHash: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly userAgent: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
                   readonly many: false;
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [
-                { readonly columns: readonly ['superAdminId'] },
-                { readonly columns: readonly ['email'] },
-                { readonly columns: readonly ['phoneNumber'] },
+                { readonly columns: readonly ['jti'] },
+                { readonly columns: readonly ['tokenHash'] },
               ];
-              indexes: readonly [];
-              foreignKeys: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'RefreshToken_adminId_idx_530179db';
+                  readonly prefix: 'RefreshToken_adminId_idx';
+                  readonly columns: readonly ['adminId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'RefreshToken_expiresAt_idx_6b6b8c10';
+                  readonly prefix: 'RefreshToken_expiresAt_idx';
+                  readonly columns: readonly ['expiresAt'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'RefreshToken_teacherId_idx_bc266660';
+                  readonly prefix: 'RefreshToken_teacherId_idx';
+                  readonly columns: readonly ['teacherId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'RefreshToken';
+                    readonly columns: readonly ['adminId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'Admin';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'RefreshToken';
+                    readonly columns: readonly ['teacherId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'Teacher';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
             };
             readonly Teacher: {
               columns: {
@@ -654,6 +833,16 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
+                readonly status: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'Inactive'>;
+                  };
+                  readonly many: false;
+                };
                 readonly teacherId: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
@@ -679,9 +868,21 @@ type ContractBase = Omit<
             };
           };
           readonly valueSet: {
+            readonly PostStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['Active', 'Inactive', 'Rejected'];
+            };
+            readonly PostType: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['TEXT', 'IMAGE', 'VIDEO'];
+            };
             readonly Role: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['SuperAdmin', 'Admin', 'Teacher', 'User'];
+              readonly values: readonly ['Admin', 'Teacher'];
+            };
+            readonly Status: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['Active', 'Inactive'];
             };
           };
         };
@@ -695,9 +896,10 @@ type ContractBase = Omit<
   readonly targetFamily: 'sql';
   readonly roots: {
     readonly Admin: { readonly namespace: 'public' & NamespaceId; readonly model: 'Admin' };
-    readonly SuperAdmin: {
+    readonly Post: { readonly namespace: 'public' & NamespaceId; readonly model: 'Post' };
+    readonly RefreshToken: {
       readonly namespace: 'public' & NamespaceId;
-      readonly model: 'SuperAdmin';
+      readonly model: 'RefreshToken';
     };
     readonly Teacher: { readonly namespace: 'public' & NamespaceId; readonly model: 'Teacher' };
   };
@@ -743,10 +945,6 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly superAdminId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
@@ -757,16 +955,15 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly superAdmin: {
+              readonly refreshTokens: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'SuperAdmin';
+                  readonly model: 'RefreshToken';
                 };
-                readonly cardinality: 'N:1';
-                readonly nullable: false;
+                readonly cardinality: '1:N';
                 readonly on: {
-                  readonly localFields: readonly ['superAdminId'];
-                  readonly targetFields: readonly ['id'];
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['adminId'];
                 };
               };
             };
@@ -782,13 +979,16 @@ type ContractBase = Omit<
                 readonly password: { readonly column: 'password' };
                 readonly phoneNumber: { readonly column: 'phoneNumber' };
                 readonly role: { readonly column: 'role' };
-                readonly superAdminId: { readonly column: 'superAdminId' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
               };
             };
           };
-          readonly SuperAdmin: {
+          readonly Post: {
             readonly fields: {
+              readonly caption: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly createdAt: {
                 readonly nullable: false;
                 readonly type: {
@@ -797,31 +997,31 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 3 };
                 };
               };
-              readonly email: {
+              readonly id: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly id: {
+              readonly likes: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
-              readonly name: {
+              readonly media: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly shares: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly status: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly password: {
+              readonly teacherId: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly phoneNumber: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly role: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly superAdminId: {
+              readonly type: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -833,33 +1033,138 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 3 };
                 };
               };
+              readonly views: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
             };
             readonly relations: {
-              readonly admins: {
+              readonly teacher: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Admin';
+                  readonly model: 'Teacher';
                 };
-                readonly cardinality: '1:N';
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
                 readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['superAdminId'];
+                  readonly localFields: readonly ['teacherId'];
+                  readonly targetFields: readonly ['teacherId'];
                 };
               };
             };
             readonly storage: {
-              readonly table: 'SuperAdmin';
+              readonly table: 'Post';
               readonly namespaceId: 'public';
               readonly fields: {
+                readonly caption: { readonly column: 'caption' };
                 readonly createdAt: { readonly column: 'createdAt' };
-                readonly email: { readonly column: 'email' };
                 readonly id: { readonly column: 'id' };
-                readonly name: { readonly column: 'name' };
-                readonly password: { readonly column: 'password' };
-                readonly phoneNumber: { readonly column: 'phoneNumber' };
-                readonly role: { readonly column: 'role' };
-                readonly superAdminId: { readonly column: 'superAdminId' };
+                readonly likes: { readonly column: 'likes' };
+                readonly media: { readonly column: 'media' };
+                readonly shares: { readonly column: 'shares' };
+                readonly status: { readonly column: 'status' };
+                readonly teacherId: { readonly column: 'teacherId' };
+                readonly type: { readonly column: 'type' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly views: { readonly column: 'views' };
+              };
+            };
+          };
+          readonly RefreshToken: {
+            readonly fields: {
+              readonly adminId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly expiresAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly ipAddress: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly jti: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly revokedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly teacherId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly tokenHash: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly userAgent: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly admin: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Admin';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: true;
+                readonly on: {
+                  readonly localFields: readonly ['adminId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly teacher: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Teacher';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: true;
+                readonly on: {
+                  readonly localFields: readonly ['teacherId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'RefreshToken';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly adminId: { readonly column: 'adminId' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly expiresAt: { readonly column: 'expiresAt' };
+                readonly id: { readonly column: 'id' };
+                readonly ipAddress: { readonly column: 'ipAddress' };
+                readonly jti: { readonly column: 'jti' };
+                readonly revokedAt: { readonly column: 'revokedAt' };
+                readonly teacherId: { readonly column: 'teacherId' };
+                readonly tokenHash: { readonly column: 'tokenHash' };
+                readonly userAgent: { readonly column: 'userAgent' };
               };
             };
           };
@@ -897,6 +1202,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly status: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly teacherId: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -910,7 +1219,27 @@ type ContractBase = Omit<
                 };
               };
             };
-            readonly relations: Record<string, never>;
+            readonly relations: {
+              readonly posts: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Post' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['teacherId'];
+                  readonly targetFields: readonly ['teacherId'];
+                };
+              };
+              readonly refreshTokens: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'RefreshToken';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['teacherId'];
+                };
+              };
+            };
             readonly storage: {
               readonly table: 'Teacher';
               readonly namespaceId: 'public';
@@ -922,6 +1251,7 @@ type ContractBase = Omit<
                 readonly password: { readonly column: 'password' };
                 readonly phoneNumber: { readonly column: 'phoneNumber' };
                 readonly role: { readonly column: 'role' };
+                readonly status: { readonly column: 'status' };
                 readonly teacherId: { readonly column: 'teacherId' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
               };
@@ -929,22 +1259,55 @@ type ContractBase = Omit<
           };
         };
         readonly enum: {
+          readonly PostStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'Active'; readonly value: 'Active' },
+              { readonly name: 'Inactive'; readonly value: 'Inactive' },
+              { readonly name: 'Rejected'; readonly value: 'Rejected' },
+            ];
+          };
+          readonly PostType: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'TEXT'; readonly value: 'TEXT' },
+              { readonly name: 'IMAGE'; readonly value: 'IMAGE' },
+              { readonly name: 'VIDEO'; readonly value: 'VIDEO' },
+            ];
+          };
           readonly Role: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'SuperAdmin'; readonly value: 'SuperAdmin' },
               { readonly name: 'Admin'; readonly value: 'Admin' },
               { readonly name: 'Teacher'; readonly value: 'Teacher' },
-              { readonly name: 'User'; readonly value: 'User' },
+            ];
+          };
+          readonly Status: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'Active'; readonly value: 'Active' },
+              { readonly name: 'Inactive'; readonly value: 'Inactive' },
             ];
           };
         };
         readonly enumMemberTypes?: {
+          readonly PostStatus: readonly [
+            { readonly name: 'Active'; readonly value: 'Active' },
+            { readonly name: 'Inactive'; readonly value: 'Inactive' },
+            { readonly name: 'Rejected'; readonly value: 'Rejected' },
+          ];
+          readonly PostType: readonly [
+            { readonly name: 'TEXT'; readonly value: 'TEXT' },
+            { readonly name: 'IMAGE'; readonly value: 'IMAGE' },
+            { readonly name: 'VIDEO'; readonly value: 'VIDEO' },
+          ];
           readonly Role: readonly [
-            { readonly name: 'SuperAdmin'; readonly value: 'SuperAdmin' },
             { readonly name: 'Admin'; readonly value: 'Admin' },
             { readonly name: 'Teacher'; readonly value: 'Teacher' },
-            { readonly name: 'User'; readonly value: 'User' },
+          ];
+          readonly Status: readonly [
+            { readonly name: 'Active'; readonly value: 'Active' },
+            { readonly name: 'Inactive'; readonly value: 'Inactive' },
           ];
         };
       };
@@ -1001,6 +1364,14 @@ type ContractBase = Omit<
           };
         },
         {
+          readonly onCreate: { readonly id: 'uuidv4'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'Post';
+            readonly field: 'id';
+            readonly namespace: 'public';
+          };
+        },
+        {
           readonly onCreate: {
             readonly id: 'timestampNow';
             readonly kind: 'generator';
@@ -1012,7 +1383,7 @@ type ContractBase = Omit<
             readonly params: { readonly precision: 3 };
           };
           readonly ref: {
-            readonly entry: 'SuperAdmin';
+            readonly entry: 'Post';
             readonly field: 'updatedAt';
             readonly namespace: 'public';
           };

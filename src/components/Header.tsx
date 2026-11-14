@@ -15,14 +15,14 @@ interface HeaderProps {
 }
 
 const Header = ({ onMenuClick }: HeaderProps) => {
- const { admin, superAdmin } = useAuthStore();
+ const { admin} = useAuthStore();
 
-console.log("Admin in Header:", admin);
-console.log("SuperAdmin in Header:", superAdmin);
 
-const currentUser = superAdmin || admin;
 
-console.log("Current User in Header:", currentUser);
+const currentUser = admin;
+console.log("Current User",currentUser);
+
+
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-zinc-200 bg-white px-4 sm:px-6">
