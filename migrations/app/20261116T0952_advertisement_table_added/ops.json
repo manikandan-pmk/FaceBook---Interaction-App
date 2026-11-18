@@ -1,0 +1,195 @@
+[
+  {
+    "id": "table.Advertisement",
+    "label": "Create table \"Advertisement\"",
+    "summary": "Creates table \"Advertisement\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Advertisement"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Advertisement\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Advertisement\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"Advertisement\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Advertisement\"",
+        "sql": "CREATE TABLE \"public\".\"Advertisement\" (\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"displayOrder\" int4 DEFAULT 0 NOT NULL,\n  \"endDate\" timestamptz(3),\n  \"id\" text NOT NULL,\n  \"isActive\" bool DEFAULT true NOT NULL,\n  \"mediaUrl\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"startDate\" timestamptz(3),\n  \"thumbnail\" text,\n  \"type\" text NOT NULL,\n  \"updatedAt\" timestamptz(3) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"Advertisement_type_check_bb5fcfda\" CHECK (\"type\" IN ('IMAGE', 'GIF', 'VIDEO', 'YOUTUBE'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Advertisement\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"Advertisement\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"Advertisement\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "index.Advertisement.Advertisement_createdAt_idx_9575dbd7",
+    "label": "Create index \"Advertisement_createdAt_idx_9575dbd7\" on \"Advertisement\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Advertisement_createdAt_idx_9575dbd7",
+        "table": "Advertisement"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Advertisement_createdAt_idx_9575dbd7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Advertisement_createdAt_idx_9575dbd7\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Advertisement_createdAt_idx_9575dbd7\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Advertisement_createdAt_idx_9575dbd7\"",
+        "sql": "CREATE INDEX \"Advertisement_createdAt_idx_9575dbd7\" ON \"public\".\"Advertisement\" (\"createdAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Advertisement_createdAt_idx_9575dbd7\" exists on \"Advertisement\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"Advertisement_createdAt_idx_9575dbd7\"",
+          "i",
+          "I",
+          "\"public\".\"Advertisement\"",
+          "btree",
+          "[\"createdAt\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Advertisement.Advertisement_displayOrder_idx_607f1474",
+    "label": "Create index \"Advertisement_displayOrder_idx_607f1474\" on \"Advertisement\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Advertisement_displayOrder_idx_607f1474",
+        "table": "Advertisement"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Advertisement_displayOrder_idx_607f1474\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Advertisement_displayOrder_idx_607f1474\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Advertisement_displayOrder_idx_607f1474\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Advertisement_displayOrder_idx_607f1474\"",
+        "sql": "CREATE INDEX \"Advertisement_displayOrder_idx_607f1474\" ON \"public\".\"Advertisement\" (\"displayOrder\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Advertisement_displayOrder_idx_607f1474\" exists on \"Advertisement\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"Advertisement_displayOrder_idx_607f1474\"",
+          "i",
+          "I",
+          "\"public\".\"Advertisement\"",
+          "btree",
+          "[\"displayOrder\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Advertisement.Advertisement_type_idx_b6b604ea",
+    "label": "Create index \"Advertisement_type_idx_b6b604ea\" on \"Advertisement\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Advertisement_type_idx_b6b604ea",
+        "table": "Advertisement"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Advertisement_type_idx_b6b604ea\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Advertisement_type_idx_b6b604ea\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Advertisement_type_idx_b6b604ea\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Advertisement_type_idx_b6b604ea\"",
+        "sql": "CREATE INDEX \"Advertisement_type_idx_b6b604ea\" ON \"public\".\"Advertisement\" (\"type\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Advertisement_type_idx_b6b604ea\" exists on \"Advertisement\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"Advertisement_type_idx_b6b604ea\"",
+          "i",
+          "I",
+          "\"public\".\"Advertisement\"",
+          "btree",
+          "[\"type\"]"
+        ]
+      }
+    ]
+  }
+]

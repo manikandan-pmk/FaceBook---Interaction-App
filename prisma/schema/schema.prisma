@@ -1,0 +1,2 @@
+// use prisma-8
+// Main schema entry point. Model and enum definitions are organized in sibling .prisma files.

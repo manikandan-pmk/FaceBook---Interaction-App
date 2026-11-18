@@ -1,0 +1,25 @@
+// use prisma-8
+
+model Advertisement {
+  id String @id @onCreate(uuid())
+  name        String
+  description String?
+
+  type        AdvertisementType
+  mediaUrl    String            // Image, GIF, or uploaded video URL
+  thumbnail   String?           // Optional video thumbnail
+
+  isActive    Boolean           @default(false)
+  displayOrder Int              @default(0)
+
+  startDate   DateTime?
+  endDate     DateTime?
+
+  createdAt  DateTime @default(now())
+  updatedAt DateTime  @onCreate(now()) @onUpdate(now())
+
+
+  @@index([type])
+  @@index([createdAt])
+  @@index([displayOrder])
+}

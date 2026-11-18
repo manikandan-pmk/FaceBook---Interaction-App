@@ -1,0 +1,25 @@
+// use prisma-8
+
+model RefreshToken {
+  id          Int      @id @default(autoincrement())
+  jti         String   @unique
+  tokenHash   String   @unique
+
+  expiresAt   DateTime
+  revokedAt   DateTime?
+
+  adminId     Int?
+  admin       Admin?   @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  teacherId   Int?
+  teacher     Teacher? @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  userAgent   String?
+  ipAddress   String?
+
+  createdAt   DateTime @default(now())
+
+  @@index([adminId])
+  @@index([teacherId])
+  @@index([expiresAt])
+}

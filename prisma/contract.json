@@ -8,6 +8,10 @@
       "model": "Admin",
       "namespace": "public"
     },
+    "Advertisement": {
+      "model": "Advertisement",
+      "namespace": "public"
+    },
     "Post": {
       "model": "Post",
       "namespace": "public"
@@ -25,6 +29,27 @@
     "namespaces": {
       "public": {
         "enum": {
+          "AdvertisementType": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "IMAGE",
+                "value": "IMAGE"
+              },
+              {
+                "name": "GIF",
+                "value": "GIF"
+              },
+              {
+                "name": "VIDEO",
+                "value": "VIDEO"
+              },
+              {
+                "name": "YOUTUBE",
+                "value": "YOUTUBE"
+              }
+            ]
+          },
           "PostStatus": {
             "codecId": "pg/text@1",
             "members": [
@@ -214,6 +239,155 @@
               },
               "namespaceId": "public",
               "table": "Admin"
+            }
+          },
+          "Advertisement": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "description": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "displayOrder": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "endDate": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "isActive": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "mediaUrl": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "startDate": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "thumbnail": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "type": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "AdvertisementType",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "description": {
+                  "column": "description"
+                },
+                "displayOrder": {
+                  "column": "displayOrder"
+                },
+                "endDate": {
+                  "column": "endDate"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "isActive": {
+                  "column": "isActive"
+                },
+                "mediaUrl": {
+                  "column": "mediaUrl"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "startDate": {
+                  "column": "startDate"
+                },
+                "thumbnail": {
+                  "column": "thumbnail"
+                },
+                "type": {
+                  "column": "type"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "Advertisement"
             }
           },
           "Post": {
@@ -798,6 +972,140 @@
                 }
               ]
             },
+            "Advertisement": {
+              "checks": [
+                {
+                  "expression": "\"type\" IN ('IMAGE', 'GIF', 'VIDEO', 'YOUTUBE')",
+                  "name": "Advertisement_type_check_bb5fcfda",
+                  "prefix": "Advertisement_type_check"
+                }
+              ],
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "description": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "displayOrder": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nullable": false
+                },
+                "endDate": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "isActive": {
+                  "codecId": "pg/bool@1",
+                  "dataType": "pg/bool",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nullable": false
+                },
+                "mediaUrl": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "startDate": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "thumbnail": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "type": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "AdvertisementType",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [
+                {
+                  "columns": [
+                    "createdAt"
+                  ],
+                  "name": "Advertisement_createdAt_idx_9575dbd7",
+                  "prefix": "Advertisement_createdAt_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "displayOrder"
+                  ],
+                  "name": "Advertisement_displayOrder_idx_607f1474",
+                  "prefix": "Advertisement_displayOrder_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "type"
+                  ],
+                  "name": "Advertisement_type_idx_b6b604ea",
+                  "prefix": "Advertisement_type_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "Post": {
               "checks": [
                 {
@@ -1247,6 +1555,15 @@
             }
           },
           "valueSet": {
+            "AdvertisementType": {
+              "kind": "valueSet",
+              "values": [
+                "IMAGE",
+                "GIF",
+                "VIDEO",
+                "YOUTUBE"
+              ]
+            },
             "PostStatus": {
               "kind": "valueSet",
               "values": [
@@ -1283,10 +1600,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "1929b64aaaf75de6e31885926b0eae127c6562597ecd18b34051d452d509a6df"
+    "storageHash": "39c408bb28fedc36bf3585975e09d1dfdcb37c3fc18828fd203da29bbfc5b9f5"
   },
   "execution": {
-    "executionHash": "4048d217add5e3afd77e0426b4d6df0ec1e0fd8860ed9caa40cc714f3555459f",
+    "executionHash": "e11c291f64f80164213235f5ef89d5d8382d11ccad2c5ee1468595aefd6e11a5",
     "mutations": {
       "defaults": [
         {
@@ -1306,6 +1623,38 @@
           },
           "ref": {
             "entry": "Admin",
+            "field": "updatedAt",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "Advertisement",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "ref": {
+            "entry": "Advertisement",
             "field": "updatedAt",
             "namespace": "public"
           }

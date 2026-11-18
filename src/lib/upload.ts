@@ -102,3 +102,95 @@ export async function deletePostMedia(directory: string | null) {
     force: true,
   });
 }
+
+
+export type AdvertisementMediaType = "IMAGE" | "GIF" | "VIDEO";
+
+export interface AdvertisementUploadResult {
+  mediaUrl: string;
+  type: AdvertisementMediaType;
+  directory: string;
+}
+
+export async function uploadAdvertisementMedia(
+  file: File,
+  expectedType: AdvertisementMediaType
+): Promise<AdvertisementUploadResult> {
+  const postConfig = UPLOAD_CONFIG.POST;
+
+  let extension: string;
+  let maxSize: number;
+
+  if (expectedType === "GIF") {
+    if (file.type !== "image/gif") {
+      throw new Error("Please upload a valid GIF file");
+    }
+
+    extension = ".gif";
+    maxSize = postConfig.IMAGE.MAX_SIZE;
+  } else if (expectedType === "IMAGE") {
+    const imageExtension = postConfig.IMAGE.ALLOWED_TYPES[file.type];
+
+    if (!imageExtension || file.type === "image/gif") {
+      throw new Error("Unsupported image format");
+    }
+
+    extension = imageExtension;
+    maxSize = postConfig.IMAGE.MAX_SIZE;
+  } else {
+    const videoExtension = postConfig.VIDEO.ALLOWED_TYPES[file.type];
+
+    if (!videoExtension) {
+      throw new Error("Unsupported video format");
+    }
+
+    extension = videoExtension;
+    maxSize = postConfig.VIDEO.MAX_SIZE;
+  }
+
+  if (!file.size) {
+    throw new Error("Uploaded file is empty");
+  }
+
+  if (file.size > maxSize) {
+    throw new Error(
+      expectedType === "VIDEO"
+        ? "Video size cannot exceed 15 MB"
+        : "Image size cannot exceed 5 MB"
+    );
+  }
+
+  const uploadId = randomUUID();
+
+  const directory = path.join(
+    process.cwd(),
+    "public",
+    postConfig.DIRECTORY,
+    "advertisements",
+    uploadId
+  );
+
+  try {
+    await mkdir(directory, { recursive: true });
+
+    const fileName = `media${extension}`;
+    const filePath = path.join(directory, fileName);
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    await writeFile(filePath, buffer, { flag: "wx" });
+
+    return {
+      mediaUrl: `/${postConfig.DIRECTORY}/advertisements/${uploadId}/${fileName}`,
+      type: expectedType,
+      directory,
+    };
+  } catch (error) {
+    await rm(directory, {
+      recursive: true,
+      force: true,
+    }).catch(() => {});
+
+    throw error;
+  }
+}

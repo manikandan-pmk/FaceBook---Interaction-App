@@ -23,9 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'1929b64aaaf75de6e31885926b0eae127c6562597ecd18b34051d452d509a6df'>;
+  StorageHashBase<'39c408bb28fedc36bf3585975e09d1dfdcb37c3fc18828fd203da29bbfc5b9f5'>;
 export type ExecutionHash =
-  ExecutionHashBase<'4048d217add5e3afd77e0426b4d6df0ec1e0fd8860ed9caa40cc714f3555459f'>;
+  ExecutionHashBase<'e11c291f64f80164213235f5ef89d5d8382d11ccad2c5ee1468595aefd6e11a5'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -284,6 +284,12 @@ type FieldTypeOverrides = {
           readonly input: 'Admin' | 'Teacher';
         };
       };
+      readonly Advertisement: {
+        readonly type: {
+          readonly output: 'IMAGE' | 'GIF' | 'VIDEO' | 'YOUTUBE';
+          readonly input: 'IMAGE' | 'GIF' | 'VIDEO' | 'YOUTUBE';
+        };
+      };
       readonly Post: {
         readonly status: {
           readonly output: 'Active' | 'Inactive' | 'Rejected';
@@ -327,6 +333,12 @@ type ColumnTypeOverrides = {
   readonly public: {
     readonly Admin: {
       readonly role: { readonly output: 'Admin' | 'Teacher'; readonly input: 'Admin' | 'Teacher' };
+    };
+    readonly Advertisement: {
+      readonly type: {
+        readonly output: 'IMAGE' | 'GIF' | 'VIDEO' | 'YOUTUBE';
+        readonly input: 'IMAGE' | 'GIF' | 'VIDEO' | 'YOUTUBE';
+      };
     };
     readonly Post: {
       readonly status: {
@@ -375,6 +387,21 @@ export namespace Models {
     updatedAt: FieldOutputTypes['public']['Admin']['updatedAt'];
     refreshTokens: public_RefreshToken[];
     readonly [RelationKeys]?: 'refreshTokens';
+  };
+  export type public_Advertisement = {
+    createdAt: FieldOutputTypes['public']['Advertisement']['createdAt'];
+    description: FieldOutputTypes['public']['Advertisement']['description'];
+    displayOrder: FieldOutputTypes['public']['Advertisement']['displayOrder'];
+    endDate: FieldOutputTypes['public']['Advertisement']['endDate'];
+    id: FieldOutputTypes['public']['Advertisement']['id'];
+    isActive: FieldOutputTypes['public']['Advertisement']['isActive'];
+    mediaUrl: FieldOutputTypes['public']['Advertisement']['mediaUrl'];
+    name: FieldOutputTypes['public']['Advertisement']['name'];
+    startDate: FieldOutputTypes['public']['Advertisement']['startDate'];
+    thumbnail: FieldOutputTypes['public']['Advertisement']['thumbnail'];
+    type: FieldOutputTypes['public']['Advertisement']['type'];
+    updatedAt: FieldOutputTypes['public']['Advertisement']['updatedAt'];
+    readonly [RelationKeys]?: never;
   };
   export type public_Post = {
     caption: FieldOutputTypes['public']['Post']['caption'];
@@ -426,6 +453,7 @@ export namespace Models {
 export declare const models: {
   public: {
     Admin: Models.public_Admin;
+    Advertisement: Models.public_Advertisement;
     Post: Models.public_Post;
     RefreshToken: Models.public_RefreshToken;
     Teacher: Models.public_Teacher;
@@ -525,6 +553,118 @@ type ContractBase = Omit<
                 { readonly columns: readonly ['phoneNumber'] },
               ];
               indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly Advertisement: {
+              columns: {
+                readonly createdAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly description: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly displayOrder: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                  readonly many: false;
+                };
+                readonly endDate: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly isActive: {
+                  readonly dataType: 'pg/bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                  readonly many: false;
+                };
+                readonly mediaUrl: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly name: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly startDate: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly thumbnail: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly type: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly updatedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'Advertisement_createdAt_idx_9575dbd7';
+                  readonly prefix: 'Advertisement_createdAt_idx';
+                  readonly columns: readonly ['createdAt'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'Advertisement_displayOrder_idx_607f1474';
+                  readonly prefix: 'Advertisement_displayOrder_idx';
+                  readonly columns: readonly ['displayOrder'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'Advertisement_type_idx_b6b604ea';
+                  readonly prefix: 'Advertisement_type_idx';
+                  readonly columns: readonly ['type'];
+                  readonly unique: false;
+                },
+              ];
               foreignKeys: readonly [];
             };
             readonly Post: {
@@ -868,6 +1008,10 @@ type ContractBase = Omit<
             };
           };
           readonly valueSet: {
+            readonly AdvertisementType: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['IMAGE', 'GIF', 'VIDEO', 'YOUTUBE'];
+            };
             readonly PostStatus: {
               readonly kind: 'valueSet';
               readonly values: readonly ['Active', 'Inactive', 'Rejected'];
@@ -896,6 +1040,10 @@ type ContractBase = Omit<
   readonly targetFamily: 'sql';
   readonly roots: {
     readonly Admin: { readonly namespace: 'public' & NamespaceId; readonly model: 'Admin' };
+    readonly Advertisement: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'Advertisement';
+    };
     readonly Post: { readonly namespace: 'public' & NamespaceId; readonly model: 'Post' };
     readonly RefreshToken: {
       readonly namespace: 'public' & NamespaceId;
@@ -979,6 +1127,93 @@ type ContractBase = Omit<
                 readonly password: { readonly column: 'password' };
                 readonly phoneNumber: { readonly column: 'phoneNumber' };
                 readonly role: { readonly column: 'role' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+              };
+            };
+          };
+          readonly Advertisement: {
+            readonly fields: {
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly description: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly displayOrder: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly endDate: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly isActive: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly mediaUrl: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly startDate: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly thumbnail: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly type: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly table: 'Advertisement';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly description: { readonly column: 'description' };
+                readonly displayOrder: { readonly column: 'displayOrder' };
+                readonly endDate: { readonly column: 'endDate' };
+                readonly id: { readonly column: 'id' };
+                readonly isActive: { readonly column: 'isActive' };
+                readonly mediaUrl: { readonly column: 'mediaUrl' };
+                readonly name: { readonly column: 'name' };
+                readonly startDate: { readonly column: 'startDate' };
+                readonly thumbnail: { readonly column: 'thumbnail' };
+                readonly type: { readonly column: 'type' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
               };
             };
@@ -1259,6 +1494,15 @@ type ContractBase = Omit<
           };
         };
         readonly enum: {
+          readonly AdvertisementType: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'IMAGE'; readonly value: 'IMAGE' },
+              { readonly name: 'GIF'; readonly value: 'GIF' },
+              { readonly name: 'VIDEO'; readonly value: 'VIDEO' },
+              { readonly name: 'YOUTUBE'; readonly value: 'YOUTUBE' },
+            ];
+          };
           readonly PostStatus: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
@@ -1291,6 +1535,12 @@ type ContractBase = Omit<
           };
         };
         readonly enumMemberTypes?: {
+          readonly AdvertisementType: readonly [
+            { readonly name: 'IMAGE'; readonly value: 'IMAGE' },
+            { readonly name: 'GIF'; readonly value: 'GIF' },
+            { readonly name: 'VIDEO'; readonly value: 'VIDEO' },
+            { readonly name: 'YOUTUBE'; readonly value: 'YOUTUBE' },
+          ];
           readonly PostStatus: readonly [
             { readonly name: 'Active'; readonly value: 'Active' },
             { readonly name: 'Inactive'; readonly value: 'Inactive' },
@@ -1359,6 +1609,31 @@ type ContractBase = Omit<
           };
           readonly ref: {
             readonly entry: 'Admin';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'uuidv4'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'Advertisement';
+            readonly field: 'id';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'Advertisement';
             readonly field: 'updatedAt';
             readonly namespace: 'public';
           };

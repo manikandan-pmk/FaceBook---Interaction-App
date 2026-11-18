@@ -1,0 +1,30 @@
+// use prisma-8
+
+enum Role {
+  Admin
+  Teacher
+}
+
+enum PostStatus {
+  Active
+  Inactive
+  Rejected
+}
+
+enum Status {
+  Active 
+  Inactive
+}
+
+enum PostType {
+  TEXT
+  IMAGE
+  VIDEO
+}
+
+enum AdvertisementType {
+  IMAGE
+  GIF
+  VIDEO
+  YOUTUBE
+}

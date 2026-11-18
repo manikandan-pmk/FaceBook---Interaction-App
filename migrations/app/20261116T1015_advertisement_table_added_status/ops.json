@@ -1,0 +1,38 @@
+[
+  {
+    "id": "setDefault.Advertisement.isActive",
+    "label": "Set default on \"Advertisement\".\"isActive\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "isActive",
+        "table": "Advertisement"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"isActive\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Advertisement",
+          "isActive"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"isActive\" on \"Advertisement\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "set default on \"isActive\"",
+        "sql": "ALTER TABLE \"public\".\"Advertisement\" ALTER COLUMN \"isActive\" SET DEFAULT false"
+      }
+    ],
+    "postcheck": []
+  }
+]

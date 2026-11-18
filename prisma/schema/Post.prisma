@@ -1,0 +1,21 @@
+// use prisma-8
+
+model Post {
+  id String @id @onCreate(uuid())
+  caption String?
+  media String?
+  type PostType @default(TEXT)
+  likes Int @default(0)
+  shares Int @default(0)
+  status PostStatus @default(Inactive)
+  views Int @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt DateTime  @onCreate(now()) @onUpdate(now())
+
+  teacherId String
+  teacher Teacher @relation(fields:[teacherId],references:[teacherId],onDelete:Cascade)
+
+@@index([teacherId])
+@@index([createdAt])
+@@index([type])
+}

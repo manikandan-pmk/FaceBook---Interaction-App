@@ -33,18 +33,8 @@ const menuSections = [
     items: [
       {
         title: "Dashboard",
-        href: "/superadmin/dashboard",
+        href: "/dashboard",
         icon: LayoutDashboard,
-      },
-      {
-        title: "Branch Management",
-        href: "/superadmin/branches",
-        icon: GitBranch,
-      },
-      {
-        title: "Admin Management",
-        href: "/superadmin/admins",
-        icon: ShieldCheck,
       },
       {
         title: "Teacher Management",
@@ -57,25 +47,15 @@ const menuSections = [
     title: "Content Management",
     items: [
       {
-        title: "All Posts",
-        href: "/superadmin/posts",
+        title: "Advertisements",
+        href: "/dashboard/advertisements",
         icon: FileText,
       },
       {
         title: "Post Approvals",
-        href: "/superadmin/approvals",
+        href: "/dashboard/post-approvals",
         icon: ClipboardCheck,
         badge: 12,
-      },
-      {
-        title: "Categories",
-        href: "/superadmin/categories",
-        icon: Folder,
-      },
-      {
-        title: "Comments & Moderation",
-        href: "/superadmin/comments",
-        icon: MessageCircle,
       },
     ],
   },
@@ -83,23 +63,18 @@ const menuSections = [
     title: "Platform Management",
     items: [
       {
-        title: "Roles & Permissions",
-        href: "/superadmin/permissions",
-        icon: Shield,
-      },
-      {
         title: "Notifications",
-        href: "/superadmin/notifications",
+        href: "/dashboard/notifications",
         icon: Bell,
       },
       {
         title: "Reports & Analytics",
-        href: "/superadmin/reports",
+        href: "/dashboard/reports",
         icon: ChartNoAxesCombined,
       },
       {
         title: "Settings",
-        href: "/superadmin/settings",
+        href: "/dashboard/settings",
         icon: Settings,
       },
     ],
